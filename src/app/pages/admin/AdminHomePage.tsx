@@ -20,11 +20,6 @@ export function AdminHomePage() {
 
   const menuItems = [
     {
-      icon: <User className="w-5 h-5" />,
-      label: 'Profile',
-      action: () => {},
-    },
-    {
       icon: <CheckCircle className="w-5 h-5" />,
       label: 'Verify Consultants',
       badge: pendingVerifications,
@@ -44,10 +39,21 @@ export function AdminHomePage() {
 
   return (
     <VintageLayout showLogo={true}>
+      {/* Profile Icon - Top Right */}
+      <div className="absolute top-8 right-4 sm:right-6 flex items-center gap-2 sm:gap-3 z-10 max-w-[calc(100%-2rem)] sm:max-w-none">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-700 rounded-full flex items-center justify-center border-2 border-amber-900 flex-shrink-0">
+          <User className="w-5 h-5 sm:w-6 sm:h-6 text-amber-50" />
+        </div>
+        <div className="min-w-0 hidden sm:block">
+          <p className="text-amber-900 font-serif text-sm sm:text-base truncate">Admin</p>
+          <p className="text-amber-700 font-serif text-xs truncate">{user?.email}</p>
+        </div>
+      </div>
+
       {/* Sidebar Toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-50 w-12 h-12 bg-amber-700 border-2 border-amber-900 flex items-center justify-center hover:bg-amber-800 transition-colors"
+        className="fixed top-8 left-6 z-50 w-12 h-12 bg-amber-700 border-2 border-amber-900 flex items-center justify-center hover:bg-amber-800 transition-colors"
       >
         {sidebarOpen ? (
           <X className="w-6 h-6 text-amber-50" />
@@ -64,14 +70,9 @@ export function AdminHomePage() {
       >
         <div className="p-6 pt-20">
           <div className="mb-8 pb-4 border-b-2 border-amber-700">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-amber-700 rounded-full flex items-center justify-center border-2 border-amber-600">
-                <User className="w-6 h-6 text-amber-50" />
-              </div>
-              <div>
-                <p className="text-amber-50 font-serif text-sm">Admin</p>
-                <p className="text-amber-300 font-serif text-xs">{user?.email}</p>
-              </div>
+            <div className="mb-2">
+              <p className="text-amber-50 font-serif text-sm">Admin</p>
+              <p className="text-amber-300 font-serif text-xs">{user?.email}</p>
             </div>
             <button
               onClick={handleLogout}
@@ -113,13 +114,13 @@ export function AdminHomePage() {
       )}
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto mt-20">
-        <div className="bg-amber-50/80 border-4 border-amber-800 p-12 shadow-lg text-center">
+      <div className="max-w-2xl mx-auto mt-16 sm:mt-20 px-4">
+        <div className="bg-amber-50/80 border-4 border-amber-800 p-6 sm:p-8 md:p-12 shadow-lg text-center">
           <VintageButton
             onClick={() => navigate('/admin/verify')}
-            className="text-lg py-4 relative"
+            className="text-base sm:text-lg py-3 sm:py-4 relative w-full"
           >
-            View New Accounts That Need Verification
+            <span className="block sm:inline">View New Accounts That Need Verification</span>
             {pendingVerifications > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm border-2 border-amber-900">
                 {pendingVerifications}

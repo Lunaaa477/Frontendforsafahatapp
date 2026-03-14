@@ -68,7 +68,13 @@ export function RegisterPage() {
 
     try {
       await register({ ...formData, userType });
-      navigate('/thank-you', { state: { userType } });
+      
+      // Navigate to different thank you pages based on user type
+      if (userType === 'consultant') {
+        navigate('/consultant-thank-you');
+      } else {
+        navigate('/thank-you');
+      }
     } catch (error) {
       toast.error('Registration failed');
     }
@@ -82,7 +88,7 @@ export function RegisterPage() {
 
   return (
     <VintageLayout>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto px-4">
         <button
           onClick={() => navigate('/')}
           className="mb-4 text-amber-800 hover:text-amber-900 flex items-center gap-2"
@@ -91,8 +97,8 @@ export function RegisterPage() {
           <span className="font-serif">Back</span>
         </button>
 
-        <div className="bg-amber-50/80 border-4 border-amber-800 p-8 shadow-lg">
-          <p className="text-center text-amber-900 font-serif mb-6 italic">
+        <div className="bg-amber-50/80 border-4 border-amber-800 p-4 sm:p-6 md:p-8 shadow-lg">
+          <p className="text-center text-amber-900 font-serif mb-4 sm:mb-6 italic text-sm sm:text-base">
             Please enter all information correctly
           </p>
 

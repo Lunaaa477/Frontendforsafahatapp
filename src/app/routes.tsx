@@ -13,6 +13,7 @@ import { AdminVerifyPage } from "./pages/admin/AdminVerifyPage";
 import { AdminManageUsersPage } from "./pages/admin/AdminManageUsersPage";
 import { AdminAIDictionaryPage } from "./pages/admin/AdminAIDictionaryPage";
 import { ThankYouPage } from "./pages/ThankYouPage";
+import { ConsultantThankYouPage } from "./pages/ConsultantThankYouPage";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
   {
     path: "/thank-you",
     Component: ThankYouPage,
+  },
+  {
+    path: "/consultant-thank-you",
+    Component: ConsultantThankYouPage,
   },
   {
     path: "/client/home",

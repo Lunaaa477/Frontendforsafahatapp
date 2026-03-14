@@ -113,7 +113,7 @@ export function ChatPage() {
 
   return (
     <VintageLayout showLogo={false}>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4">
         <button
           onClick={() => navigate(-1)}
           className="mb-4 text-amber-800 hover:text-amber-900 flex items-center gap-2"
@@ -124,24 +124,24 @@ export function ChatPage() {
 
         <div className="bg-amber-50/80 border-4 border-amber-800 shadow-lg">
           {/* Header */}
-          <div className="bg-amber-700 text-amber-50 p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-amber-900 rounded-full flex items-center justify-center">
-                <User className="w-6 h-6" />
+          <div className="bg-amber-700 text-amber-50 p-3 sm:p-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-900 rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <span className="font-serif text-lg">{consultantName}</span>
+              <span className="font-serif text-base sm:text-lg truncate">{consultantName}</span>
             </div>
             <button
               onClick={() => setShowReport(true)}
-              className="text-amber-100 hover:text-white flex items-center gap-2"
+              className="text-amber-100 hover:text-white flex items-center gap-1 sm:gap-2 flex-shrink-0"
             >
-              <Flag className="w-5 h-5" />
-              <span className="font-serif text-sm">Report</span>
+              <Flag className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-serif text-xs sm:text-sm hidden sm:inline">Report</span>
             </button>
           </div>
 
           {/* Messages */}
-          <div className="p-6 h-96 overflow-y-auto space-y-4 bg-amber-50/50">
+          <div className="p-3 sm:p-4 md:p-6 h-[400px] sm:h-96 overflow-y-auto space-y-3 sm:space-y-4 bg-amber-50/50">
             {messages.map((message) => (
               <div
                 key={message.id}

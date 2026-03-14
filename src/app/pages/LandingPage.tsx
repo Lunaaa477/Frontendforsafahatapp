@@ -38,9 +38,9 @@ export function LandingPage() {
 
   return (
     <VintageLayout>
-      <div className="max-w-md mx-auto">
-        <div className="bg-amber-50/80 border-4 border-amber-800 p-8 shadow-lg">
-          <h2 className="text-2xl text-center mb-6 text-amber-900 font-serif tracking-wide">
+      <div className="max-w-md mx-auto px-4">
+        <div className="bg-amber-50/80 border-4 border-amber-800 p-6 sm:p-8 shadow-lg">
+          <h2 className="text-xl sm:text-2xl text-center mb-6 text-amber-900 font-serif tracking-wide">
             Log In
           </h2>
           
