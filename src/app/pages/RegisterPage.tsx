@@ -24,7 +24,11 @@ export function RegisterPage() {
     yearsOfExperience: '',
     lawFirm: '',
     description: '',
+    ratePer1000Words: '',
     profilePhoto: null as File | null,
+    bachelorsDegree: null as File | null,
+    companyStatement: null as File | null,
+    ministryCard: null as File | null,
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   
@@ -53,8 +57,12 @@ export function RegisterPage() {
   };
 
   const handleProfessional = () => {
-    if (!formData.country || !formData.licenseNumber || !formData.issuingAuthority || !formData.yearsOfExperience) {
+    if (!formData.country || !formData.licenseNumber || !formData.issuingAuthority || !formData.yearsOfExperience || !formData.ratePer1000Words) {
       toast.error('Please fill in all required fields');
+      return;
+    }
+    if (!formData.bachelorsDegree || !formData.companyStatement || !formData.ministryCard) {
+      toast.error('Please upload all required documents');
       return;
     }
     setStep('terms');
@@ -80,9 +88,9 @@ export function RegisterPage() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, profilePhoto: e.target.files[0] });
+      setFormData({ ...formData, [fieldName]: e.target.files[0] });
     }
   };
 
@@ -213,6 +221,14 @@ export function RegisterPage() {
                 onChange={(e) => setFormData({ ...formData, lawFirm: e.target.value })}
               />
 
+              <VintageInput
+                type="number"
+                placeholder="Rate per 1000 Words ($)"
+                value={formData.ratePer1000Words}
+                onChange={(e) => setFormData({ ...formData, ratePer1000Words: e.target.value })}
+                required
+              />
+
               <div>
                 <label className="block text-sm text-amber-900 mb-2 font-serif">
                   Description of Experience
@@ -231,13 +247,67 @@ export function RegisterPage() {
                 </label>
                 <label className="flex items-center gap-2 px-4 py-3 bg-amber-50 border-2 border-amber-300 cursor-pointer hover:border-amber-700 transition-colors">
                   <Upload className="w-5 h-5 text-amber-700" />
-                  <span className="text-amber-700 font-serif">
+                  <span className="text-amber-700 font-serif text-sm truncate">
                     {formData.profilePhoto ? formData.profilePhoto.name : 'Choose file'}
                   </span>
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileChange}
+                    onChange={(e) => handleFileChange(e, 'profilePhoto')}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm text-amber-900 mb-2 font-serif">
+                  Upload Bachelor's Degree *
+                </label>
+                <label className="flex items-center gap-2 px-4 py-3 bg-amber-50 border-2 border-amber-300 cursor-pointer hover:border-amber-700 transition-colors">
+                  <Upload className="w-5 h-5 text-amber-700" />
+                  <span className="text-amber-700 font-serif text-sm truncate">
+                    {formData.bachelorsDegree ? formData.bachelorsDegree.name : 'Choose file'}
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,image/*"
+                    onChange={(e) => handleFileChange(e, 'bachelorsDegree')}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm text-amber-900 mb-2 font-serif">
+                  Upload Company Statement for Years of Experience *
+                </label>
+                <label className="flex items-center gap-2 px-4 py-3 bg-amber-50 border-2 border-amber-300 cursor-pointer hover:border-amber-700 transition-colors">
+                  <Upload className="w-5 h-5 text-amber-700" />
+                  <span className="text-amber-700 font-serif text-sm truncate">
+                    {formData.companyStatement ? formData.companyStatement.name : 'Choose file'}
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,image/*"
+                    onChange={(e) => handleFileChange(e, 'companyStatement')}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm text-amber-900 mb-2 font-serif">
+                  Upload Ministry Registration Card *
+                </label>
+                <label className="flex items-center gap-2 px-4 py-3 bg-amber-50 border-2 border-amber-300 cursor-pointer hover:border-amber-700 transition-colors">
+                  <Upload className="w-5 h-5 text-amber-700" />
+                  <span className="text-amber-700 font-serif text-sm truncate">
+                    {formData.ministryCard ? formData.ministryCard.name : 'Choose file'}
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,image/*"
+                    onChange={(e) => handleFileChange(e, 'ministryCard')}
                     className="hidden"
                   />
                 </label>

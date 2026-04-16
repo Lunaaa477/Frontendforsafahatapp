@@ -95,13 +95,15 @@ Response:
 ### 1. Client
 - Can upload documents to AI
 - Can browse and contact consultants
-- Can chat with consultants
+- Can exchange files with consultants
 - Can rate consultants after conversation ends
+- Can view list of contacted consultants
 
 ### 2. Legal Consultant
 - Must be verified by admin before accessing the platform
 - Can receive and manage client requests
-- Can send payment requests in chat
+- Can exchange files with clients
+- Can send payment requests during file exchanges
 - Can view their profile and request edits
 
 ### 3. Admin
@@ -152,11 +154,9 @@ GET /api/consultants/:id
 Response: Same as single consultant object above
 ```
 
-### Chat Management
-
-#### Get Chat Messages
+#### Get Contacted Consultants (for Client)
 ```typescript
-GET /api/chat/:consultantId
+GET /api/client/contacted-consultants
 Headers:
 {
   "Authorization": "Bearer <token>"
@@ -164,14 +164,41 @@ Headers:
 
 Response:
 {
-  "messages": [
+  "consultants": [
+    {
+      "id": "string",
+      "name": "string",
+      "speciality": "string",
+      "rating": "number",
+      "lastContact": "ISO date string",
+      "status": "active" | "finished"
+    }
+  ]
+}
+```
+
+### File Exchange Management
+
+#### Get File Exchange History
+```typescript
+GET /api/file-exchange/:consultantId
+Headers:
+{
+  "Authorization": "Bearer <token>"
+}
+
+Response:
+{
+  "files": [
     {
       "id": "string",
       "sender": "client" | "consultant",
-      "content": "string",
+      "fileName": "string",
+      "fileSize": "string",
       "timestamp": "ISO date string",
-      "type": "text" | "payment",
-      "amount": "number (optional, for payment type)"
+      "type": "document" | "payment",
+      "amount": "number (optional, for payment type)",
+      "downloadUrl": "string (optional, for document type)"
     }
   ],
   "consultantInfo": {
@@ -181,35 +208,9 @@ Response:
 }
 ```
 
-#### Send Message
+#### Upload File
 ```typescript
-POST /api/chat/:consultantId/message
-Headers:
-{
-  "Authorization": "Bearer <token>"
-}
-Request Body:
-{
-  "content": "string",
-  "type": "text" | "payment",
-  "amount": "number (optional, for payment requests)"
-}
-
-Response:
-{
-  "message": {
-    "id": "string",
-    "sender": "client" | "consultant",
-    "content": "string",
-    "timestamp": "ISO date string",
-    "type": "text" | "payment"
-  }
-}
-```
-
-#### Upload Attachment
-```typescript
-POST /api/chat/:consultantId/attachment
+POST /api/file-exchange/:consultantId/upload
 Headers:
 {
   "Authorization": "Bearer <token>",
@@ -217,19 +218,54 @@ Headers:
 }
 Request Body:
 {
-  "file": "File"
+  "file": "File (.pdf, .doc, .docx)"
 }
 
 Response:
 {
-  "url": "string",
-  "messageId": "string"
+  "file": {
+    "id": "string",
+    "fileName": "string",
+    "fileSize": "string",
+    "uploadedAt": "ISO date string"
+  }
+}
+```
+
+#### Download File
+```typescript
+GET /api/file-exchange/download/:fileId
+Headers:
+{
+  "Authorization": "Bearer <token>"
+}
+
+Response: File blob
+```
+
+#### Send Payment Request
+```typescript
+POST /api/payments/request
+Headers:
+{
+  "Authorization": "Bearer <token>"
+}
+Request Body:
+{
+  "consultantId": "string",
+  "amount": "number"
+}
+
+Response:
+{
+  "success": "boolean",
+  "paymentRequestId": "string"
 }
 ```
 
 #### End Conversation
 ```typescript
-POST /api/chat/:consultantId/end
+POST /api/conversations/:consultantId/end
 Headers:
 {
   "Authorization": "Bearer <token>"
@@ -626,15 +662,29 @@ interface Consultant {
 }
 ```
 
-### Message Object
+### File Exchange Object
 ```typescript
-interface Message {
+interface FileExchange {
   id: string;
   sender: 'client' | 'consultant';
-  content: string;
+  fileName: string;
+  fileSize: string;
   timestamp: Date;
-  type: 'text' | 'payment';
+  type: 'document' | 'payment';
   amount?: number; // for payment type
+  downloadUrl?: string; // for document type
+}
+```
+
+### Contacted Consultant Object (for Client Home)
+```typescript
+interface ContactedConsultant {
+  id: string;
+  name: string;
+  speciality: string;
+  rating: number;
+  lastContact: Date;
+  status: 'active' | 'finished';
 }
 ```
 
@@ -656,41 +706,35 @@ interface DictionaryEntry {
 ### Accepted File Types
 - **Documents**: .pdf, .doc, .docx
 - **Profile Photos**: .jpg, .jpeg, .png
-- **Chat Attachments**: .pdf, .doc, .docx, .jpg, .jpeg, .png
+- **File Exchange Documents**: .pdf, .doc, .docx
 
 ### File Size Limits (Recommended)
 - Documents: 10 MB
 - Profile Photos: 5 MB
-- Chat Attachments: 10 MB
+- File Exchange Documents: 10 MB
 
 ### Storage
 - Files should be stored securely with access controls
 - Profile photos should be publicly accessible via URL
-- Document attachments should be accessible only to involved parties
+- File exchange documents should be accessible only to the client and consultant involved in the exchange
 
 ---
 
 ## Payment Integration
 
-**Location**: `/src/app/pages/ChatPage.tsx`
+**Location**: `/src/app/pages/FileExchangePage.tsx`
 
-The payment request system is built into the chat. When a consultant sends a payment request:
+The payment request system is built into the file exchange. When a consultant sends a payment request:
 
-1. Frontend creates a payment message in chat
+1. Frontend creates a payment request in the file exchange
 2. Client clicks "Pay Now"
 3. Backend should integrate with payment gateway (Stripe, PayPal, etc.)
 
 ```typescript
-POST /api/payments/process
+POST /api/payments/process/:fileId
 Headers:
 {
   "Authorization": "Bearer <token>"
-}
-Request Body:
-{
-  "consultantId": "string",
-  "amount": "number",
-  "chatId": "string"
 }
 
 Response:
@@ -754,12 +798,13 @@ Error Response Format:
 Search for `TODO: Replace with actual API call` or `TODO:` comments in these files:
 
 1. **Authentication**: `/src/app/contexts/AuthContext.tsx`
-2. **Client AI Page**: `/src/app/pages/client/ClientAIPage.tsx`
-3. **Professionals Page**: `/src/app/pages/client/ClientProfessionalsPage.tsx`
-4. **Chat Page**: `/src/app/pages/ChatPage.tsx`
-5. **Admin Verify**: `/src/app/pages/admin/AdminVerifyPage.tsx`
-6. **Admin Manage Users**: `/src/app/pages/admin/AdminManageUsersPage.tsx`
-7. **Admin AI Dictionary**: `/src/app/pages/admin/AdminAIDictionaryPage.tsx`
+2. **Client Home Page**: `/src/app/pages/client/ClientHomePage.tsx`
+3. **Client AI Page**: `/src/app/pages/client/ClientAIPage.tsx`
+4. **Professionals Page**: `/src/app/pages/client/ClientProfessionalsPage.tsx`
+5. **File Exchange Page**: `/src/app/pages/FileExchangePage.tsx`
+6. **Admin Verify**: `/src/app/pages/admin/AdminVerifyPage.tsx`
+7. **Admin Manage Users**: `/src/app/pages/admin/AdminManageUsersPage.tsx`
+8. **Admin AI Dictionary**: `/src/app/pages/admin/AdminAIDictionaryPage.tsx`
 
 ### Example API Integration
 
@@ -802,13 +847,15 @@ const login = async (email: string, password: string) => {
 2. **Client Flow**
    - Test AI document analysis
    - Test consultant search and filtering
-   - Test chat functionality
+   - Test file upload to consultant
+   - Test file download from consultant
    - Test payment requests
    - Test rating system
+   - Test viewing contacted consultants list
 
 3. **Consultant Flow**
    - Test request management (new/open/finished)
-   - Test chat with clients
+   - Test file exchange with clients
    - Test payment request sending
    - Test profile view
 

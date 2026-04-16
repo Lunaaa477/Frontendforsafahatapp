@@ -115,17 +115,33 @@ export function AdminHomePage() {
 
       {/* Main Content */}
       <div className="max-w-2xl mx-auto mt-16 sm:mt-20 px-4">
-        <div className="bg-amber-50/80 border-4 border-amber-800 p-6 sm:p-8 md:p-12 shadow-lg text-center">
-          <VintageButton
-            onClick={() => navigate('/admin/verify')}
-            className="text-base sm:text-lg py-3 sm:py-4 relative w-full"
-          >
-            <span className="block sm:inline">View New Accounts That Need Verification</span>
+        <div className="bg-amber-50/80 border-4 border-amber-800 p-6 sm:p-8 md:p-12 shadow-lg space-y-4 sm:space-y-6">
+          <div className="relative">
+            <VintageButton
+              onClick={() => navigate('/admin/verify')}
+              className="w-full text-lg py-4"
+            >
+              Verify Consultants
+            </VintageButton>
             {pendingVerifications > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm border-2 border-amber-900">
+              <div className="absolute -top-2 -right-2 bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-serif border-2 border-amber-900">
                 {pendingVerifications}
-              </span>
+              </div>
             )}
+          </div>
+
+          <VintageButton
+            onClick={() => navigate('/admin/manage-users')}
+            className="w-full text-lg py-4"
+          >
+            Manage Users
+          </VintageButton>
+
+          <VintageButton
+            onClick={() => navigate('/admin/ai-dictionary')}
+            className="w-full text-lg py-4"
+          >
+            Update AI Dictionary
           </VintageButton>
         </div>
       </div>

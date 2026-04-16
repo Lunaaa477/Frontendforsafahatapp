@@ -20,27 +20,29 @@ export function ConsultantHomePage() {
 
   return (
     <VintageLayout showLogo={true}>
-      <button
-        onClick={() => navigate('/consultant/profile')}
-        className="absolute top-8 left-4 sm:left-6 flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity z-10 max-w-[calc(100%-2rem)] sm:max-w-none"
-      >
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-700 rounded-full flex items-center justify-center border-2 border-amber-900 flex-shrink-0">
+      <div className="absolute top-8 left-4 sm:left-6 flex items-center gap-2 sm:gap-3 z-10 max-w-[calc(100%-2rem)] sm:max-w-none">
+        <button
+          onClick={() => navigate('/consultant/profile')}
+          className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-700 rounded-full flex items-center justify-center border-2 border-amber-900 flex-shrink-0 hover:opacity-80 transition-opacity"
+        >
           <User className="w-5 h-5 sm:w-6 sm:h-6 text-amber-50" />
-        </div>
+        </button>
         <div className="min-w-0">
-          <p className="text-amber-900 font-serif text-sm sm:text-base truncate">{user?.name || user?.email}</p>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleLogout();
-            }}
+            onClick={() => navigate('/consultant/profile')}
+            className="text-amber-900 font-serif text-sm sm:text-base truncate block hover:opacity-80 transition-opacity"
+          >
+            {user?.name || user?.email}
+          </button>
+          <button
+            onClick={handleLogout}
             className="text-xs sm:text-sm text-amber-700 hover:text-amber-900 flex items-center gap-1"
           >
             <LogOut className="w-3 h-3" />
             <span>Logout</span>
           </button>
         </div>
-      </button>
+      </div>
 
       <div className="max-w-2xl mx-auto mt-16 sm:mt-20 px-4">
         <div className="bg-amber-50/80 border-4 border-amber-800 p-6 sm:p-8 md:p-12 shadow-lg space-y-4 sm:space-y-6">

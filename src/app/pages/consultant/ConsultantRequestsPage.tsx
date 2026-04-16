@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router';
 import { VintageLayout } from '../../components/VintageLayout';
 import { VintageButton } from '../../components/VintageButton';
-import { ArrowLeft, User, MessageCircle } from 'lucide-react';
+import { ArrowLeft, User, FileText } from 'lucide-react';
 
 interface Request {
   id: string;
@@ -142,11 +142,11 @@ export function ConsultantRequestsPage() {
 
                       <div className="flex gap-2">
                         <VintageButton
-                          onClick={() => navigate(`/chat/${request.id}`)}
+                          onClick={() => navigate(`/file-exchange/${request.id}`)}
                           className="text-sm py-2 px-4"
                         >
-                          <MessageCircle className="w-4 h-4 inline mr-2" />
-                          {type === 'new' ? 'Open Chat' : type === 'open' ? 'Continue Chat' : 'View Chat'}
+                          <FileText className="w-4 h-4 inline mr-2" />
+                          {type === 'new' ? 'Open Request' : type === 'open' ? 'Continue' : 'View Files'}
                         </VintageButton>
                       </div>
                     </div>

@@ -11,7 +11,7 @@ interface Consultant {
   name: string;
   profilePhoto?: string;
   yearsOfExperience: number;
-  hourlyRate: number;
+  ratePer1000Words: number;
   rating: number;
   speciality: string;
   description: string;
@@ -23,7 +23,7 @@ const mockConsultants: Consultant[] = [
     id: '1',
     name: 'Sarah Ahmed',
     yearsOfExperience: 15,
-    hourlyRate: 150,
+    ratePer1000Words: 25,
     rating: 4.8,
     speciality: 'Corporate Law',
     description: 'Experienced in mergers, acquisitions, and corporate governance.',
@@ -33,7 +33,7 @@ const mockConsultants: Consultant[] = [
     id: '2',
     name: 'Mohammed Hassan',
     yearsOfExperience: 10,
-    hourlyRate: 120,
+    ratePer1000Words: 20,
     rating: 4.9,
     speciality: 'Contract Law',
     description: 'Specialized in contract drafting and dispute resolution.',
@@ -43,7 +43,7 @@ const mockConsultants: Consultant[] = [
     id: '3',
     name: 'Fatima Al-Mansour',
     yearsOfExperience: 8,
-    hourlyRate: 100,
+    ratePer1000Words: 15,
     rating: 4.7,
     speciality: 'Family Law',
     description: 'Expert in family law matters and inheritance cases.',
@@ -68,11 +68,11 @@ export function ClientProfessionalsPage() {
   const handleUploadForSuggestion = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      
+
       // Validate file type
       const fileExt = file.name.split('.').pop()?.toLowerCase();
-      if (fileExt !== 'pdf' && fileExt !== 'doc' && fileExt !== 'docx') {
-        toast.error('Only .pdf and .doc/.docx files are supported');
+      if (fileExt !== 'pdf') {
+        toast.error('Only .pdf files are supported');
         return;
       }
 
@@ -119,16 +119,16 @@ export function ClientProfessionalsPage() {
   };
 
   const filteredConsultants = (suggestedConsultants || mockConsultants)
-    .filter(c => 
+    .filter(c =>
       c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.speciality.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter(c => c.yearsOfExperience >= filters.minExperience)
-    .filter(c => c.hourlyRate <= filters.maxRate)
+    .filter(c => c.ratePer1000Words <= filters.maxRate)
     .sort((a, b) => {
       if (filters.sortBy === 'rating') return b.rating - a.rating;
       if (filters.sortBy === 'experience') return b.yearsOfExperience - a.yearsOfExperience;
-      if (filters.sortBy === 'rate') return a.hourlyRate - b.hourlyRate;
+      if (filters.sortBy === 'rate') return a.ratePer1000Words - b.ratePer1000Words;
       return 0;
     });
 
@@ -162,7 +162,7 @@ export function ClientProfessionalsPage() {
                     </div>
                     <input
                       type="file"
-                      accept=".pdf,.doc,.docx"
+                      accept=".pdf"
                       onChange={handleUploadForSuggestion}
                       className="hidden"
                     />
@@ -222,7 +222,7 @@ export function ClientProfessionalsPage() {
                   >
                     <option value="rating">Rating</option>
                     <option value="experience">Years of Experience</option>
-                    <option value="rate">Hourly Rate</option>
+                    <option value="rate">Rate per 1000 Words</option>
                   </select>
                 </div>
 
@@ -242,13 +242,13 @@ export function ClientProfessionalsPage() {
 
                 <div>
                   <label className="block text-xs sm:text-sm text-amber-900 mb-2 font-serif">
-                    Maximum Hourly Rate: ${filters.maxRate}
+                    Maximum Rate per 1000 Words: ${filters.maxRate}
                   </label>
                   <input
                     type="range"
-                    min="50"
-                    max="500"
-                    step="10"
+                    min="10"
+                    max="100"
+                    step="5"
                     value={filters.maxRate}
                     onChange={(e) => setFilters({ ...filters, maxRate: parseInt(e.target.value) })}
                     className="w-full"
@@ -290,7 +290,7 @@ export function ClientProfessionalsPage() {
 
                     <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-amber-800 font-serif">
                       <span>{consultant.yearsOfExperience} yrs exp</span>
-                      <span>${consultant.hourlyRate}/hr</span>
+                      <span>${consultant.ratePer1000Words}/1000 words</span>
                     </div>
 
                     {selectedConsultant?.id === consultant.id && (
@@ -304,7 +304,7 @@ export function ClientProfessionalsPage() {
                         <VintageButton
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`/chat/${consultant.id}`);
+                            navigate(`/file-exchange/${consultant.id}`);
                           }}
                           className="w-full sm:w-auto"
                         >
